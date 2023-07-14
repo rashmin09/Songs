@@ -6,11 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "Songs.db";
 
     private static final String TABLE_SONG = "song";
@@ -89,6 +90,85 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return tasks;
+    }
+    public ArrayList<Song> getFiveStarSongs() {
+        ArrayList<Song> songs = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS, COLUMN_YEAR, COLUMN_STARS};
+        String selection = COLUMN_STARS + " = ?";
+        String[] selectionArgs = {"5"};
+        Cursor cursor = db.query(TABLE_SONG, columns, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String singers = cursor.getString(2);
+                int year = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+                Song song = new Song(id, title, singers, year, stars);
+                songs.add(song);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return songs;
+    }
+
+    public ArrayList<String> getDistinctYears() {
+        ArrayList<String> years = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_YEAR};
+        Cursor cursor = db.query(true, TABLE_SONG, columns, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String year = cursor.getString(0);
+                years.add(year);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return years;
+    }
+
+    public ArrayList<Song> getSongsByYear(String year) {
+        ArrayList<Song> songs = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_TITLE, COLUMN_SINGERS, COLUMN_YEAR, COLUMN_STARS};
+        String selection = COLUMN_YEAR + " = ?";
+        String[] selectionArgs = {year};
+        Cursor cursor = db.query(TABLE_SONG, columns, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String singers = cursor.getString(2);
+                int songYear = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+                Song song = new Song(id, title, singers, songYear, stars);
+                songs.add(song);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return songs;
+    }
+
+    public void deleteSong(int songId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_SONG, COLUMN_ID + "=?", new String[]{String.valueOf(songId)});
+        db.close();
+    }
+
+    public void updateSong(int songId, String title, String singers, int year, int stars) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TITLE, title);
+        values.put(COLUMN_SINGERS, singers);
+        values.put(COLUMN_YEAR, year);
+        values.put(COLUMN_STARS, stars);
+        db.update(TABLE_SONG, values, COLUMN_ID + "=?", new String[]{String.valueOf(songId)});
+        db.close();
     }
 }
 

@@ -20,8 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     EditText etTitle, etSingers, etYear;
     RadioGroup rgStars;
-    Button btnInsert, btnShow;
-    TextView tvResults;
+    Button btnInsert, btnShow, btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         rgStars = findViewById(R.id.rgStars);
         btnInsert = findViewById(R.id.btnInsert);
         btnShow = findViewById(R.id.btnShow);
+        btnEdit = findViewById(R.id.btnEdit);
 
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SongDetailsEditActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override

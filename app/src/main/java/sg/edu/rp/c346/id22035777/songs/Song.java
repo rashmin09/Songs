@@ -1,6 +1,8 @@
 package sg.edu.rp.c346.id22035777.songs;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable{
     private int id;
     private String title;
     private String singers;
@@ -13,6 +15,11 @@ public class Song {
         this.singers = singers;
         this.year = year;
         this.stars = stars;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 
     public int getId() {
@@ -33,6 +40,22 @@ public class Song {
 
     public int getStars() {
         return stars;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSingers(String singers) {
+        this.singers = singers;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 }
 

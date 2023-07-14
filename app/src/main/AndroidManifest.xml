@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Songs"
         tools:targetApi="31">
         <activity
+            android:name=".SongDetailsEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SongDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SongListActivity"
             android:exported="false" />
         <activity
